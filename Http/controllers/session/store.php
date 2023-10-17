@@ -1,43 +1,25 @@
 <?php
 
-use Core\App;
-use Core\Database;
+use Core\Authenticator;
 use Http\Forms\LoginForm;
-
-$db = App::resolve(Database::class);
 
 $email = $_POST['email'];
 $password = $_POST['password'];
 
 $form = new LoginForm();
 
-if (!$form->validate($email, $password)) {
-    view('session/create.view.php', [
-        "errors" => $form->errors()
-    ]);
+if ($form->validate($email, $password)) {
+    if ((new Authenticator)->attempt($email, $password)) {
+        redirect('/');
+    }
 
-    exit();
+    $form->error('email', "There was a problem with the credentials provided.");
+    $form->error('password', "There was a problem with the credentials provided.");
 }
 
-$user = $db->query('SELECT * FROM users WHERE email = :email', [
-    'email' => $email
-])->findOne();
 
-if (!$user || !password_verify($password, $user["password"])) {
-    view('session/create.view.php', [
-        "errors" => [
-            "email" => "There was a problem with the credentials provided.",
-            "password" => "There was a problem with the credentials provided."
-        ]
-    ]);
-
-    return;
-}
-
-login([
-    "email" => $email,
-    "id" => $user["id"]
+view('session/create.view.php', [
+    "errors" => $form->errors()
 ]);
 
-header("location: /");
-exit();
+return;
