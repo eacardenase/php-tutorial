@@ -2,7 +2,12 @@
 
 namespace Core;
 
-class Router {
+use Core\Middleware\Guest;
+use Core\Middleware\Auth;
+use Core\Middleware\Middleware;
+
+class Router
+{
     protected $routes = [];
 
     protected function add(string $method, string $uri, string $controller): Router
@@ -19,27 +24,27 @@ class Router {
 
     public function get(string $uri, string $controller): Router
     {
-        return $this->add( 'GET', $uri, $controller);
+        return $this->add('GET', $uri, $controller);
     }
 
     public function post(string $uri, string $controller): Router
     {
-         return $this->add( 'POST', $uri, $controller);
+        return $this->add('POST', $uri, $controller);
     }
 
     public function delete(string $uri, string $controller): Router
     {
-         return $this->add( 'DELETE', $uri, $controller);
+        return $this->add('DELETE', $uri, $controller);
     }
 
     public function patch(string $uri, string $controller): Router
     {
-         return $this->add( 'PATCH', $uri, $controller);
+        return $this->add('PATCH', $uri, $controller);
     }
 
     public function put(string $uri, string $controller): Router
     {
-         return $this->add( 'PUT', $uri, $controller);
+        return $this->add('PUT', $uri, $controller);
     }
 
     public function only(string $key): Router
@@ -53,23 +58,8 @@ class Router {
     {
         foreach ($this->routes as $route) {
             if ($route['uri'] === $uri && $route['method'] === strtoupper($method)) {
-                // apply corresponding middleware
-                if ($route['middleware'] === "guest") {
-                    if ($_SESSION['user'] ?? false) {
-                        header('location: /');
-
-                        exit();
-                    }
-                }
-
-                if ($route['middleware'] === "auth") {
-                    if (! $_SESSION['user'] ?? false) {
-                        header('location: /register');
-
-                        exit();
-                    }
-                }
-
+                Middleware::resolve($route["middleware"]);
+                
                 return require base_path($route['controller']);
             }
         }
