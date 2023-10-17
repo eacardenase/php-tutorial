@@ -19,9 +19,9 @@ if (!Validator::string($password, 6, 16)) {
     $errors['password'] = 'Please provide a password of at least 7 characters.';
 }
 
-if (! empty($errors)) {
+if (!empty($errors)) {
     view('registration/create.view.php', [
-       "errors" => $errors
+        "errors" => $errors
     ]);
 
     return;
@@ -29,7 +29,7 @@ if (! empty($errors)) {
 
 $user = $db->query('SELECT * FROM users WHERE email = :email', [
     'email' => $email
-])->findOne ();
+])->findOne();
 
 if ($user) {
     header('location: /');
@@ -37,7 +37,7 @@ if ($user) {
 } else {
     $db->query('INSERT INTO users(email, password) VALUES(:email, :password)', [
         'email' => $email,
-        'password' => $password
+        'password' => password_hash($password, PASSWORD_BCRYPT)
     ]);
 
     $_SESSION['user'] = [
