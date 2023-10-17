@@ -20,7 +20,7 @@ if (!Validator::string($password)) {
 }
 
 if (!empty($errors)) {
-    view('sessions/create.view.php', [
+    view('session/create.view.php', [
         "errors" => $errors
     ]);
 
@@ -32,7 +32,7 @@ $user = $db->query('SELECT * FROM users WHERE email = :email', [
 ])->findOne();
 
 if (!$user || !password_verify($password, $user["password"])) {
-    view('sessions/create.view.php', [
+    view('session/create.view.php', [
         "errors" => [
             "email" => "There was a problem with the credentials provided.",
             "password" => "There was a problem with the credentials provided."
@@ -47,3 +47,4 @@ login([
 ]);
 
 header("location: /");
+exit();
