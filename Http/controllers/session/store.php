@@ -20,8 +20,9 @@ if ($form->validate($email, $password)) {
     $form->error('password', "There was a problem with the credentials provided.");
 }
 
-
-//$_SESSION['_flash']["errors"] = $form->errors();
 Session::flash("errors", $form->errors());
+Session::flash("old", [
+    "email" => $email,
+]);
 
 return redirect("/login");

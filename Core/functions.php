@@ -1,6 +1,7 @@
 <?php
 
 use Core\Response;
+use JetBrains\PhpStorm\NoReturn;
 
 function dd($value): void
 {
@@ -44,9 +45,14 @@ function view(string $path, array $attributes = []): void
     require base_path('views/' . $path);
 }
 
-function redirect(string $path): void
+#[NoReturn] function redirect(string $path): void
 {
     header("location: $path");
 
     exit();
+}
+
+function old(string $key, string $default = ""): mixed
+{
+    return Core\Session::get("old")[$key] ?? $default;
 }
