@@ -1,0 +1,16 @@
+{
+  "name": "eacardenase/php-demo",
+  "authors": [
+    {
+      "name": "Edwin Cardenas",
+      "email": "eacardenase@unal.edu.co"
+    }
+  ],
+  "require": {},
+  "autoload": {
+    "psr-4": {
+      "Core\\": "Core/",
+      "Http\\": "Http/"
+    }
+  }
+}
