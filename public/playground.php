@@ -1,6 +1,6 @@
 <?php
 
-use \Illuminate\Support\Collection;
+use Illuminate\Support\Collection;
 
 require __DIR__ . "/../vendor/autoload.php";
 
@@ -11,5 +11,3 @@ $nums = new Collection([
 if ($nums->contains(10)) {
     die("It contains 10");
 }
-
-$nums->filter()
